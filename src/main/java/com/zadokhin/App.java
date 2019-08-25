@@ -37,8 +37,7 @@ public class App implements CommandLineRunner {
         final Optional<Element> nodeToFind = htmlElementFinder.findNodeById(elementIdToSearch, originalFilename);
         if (nodeToFind.isPresent()) {
             final Element sampleElement = nodeToFind.get();
-            final Optional<Element> elementBySample = elementMatcherService.findElementBySample(sampleElement,
-                    diffCaseFilename);
+            final Optional<Element> elementBySample = elementMatcherService.findElementBySample(sampleElement, diffCaseFilename);
             elementBySample.ifPresent(element -> showResults(sampleElement, element));
         } else {
             System.out.printf("Sorry, cannot find element with id %s in original file", elementIdToSearch);

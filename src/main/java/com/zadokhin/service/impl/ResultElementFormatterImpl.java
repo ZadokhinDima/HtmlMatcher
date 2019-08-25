@@ -19,9 +19,12 @@ public class ResultElementFormatterImpl implements ResultElementFormatter {
         if (element.parent() != null) {
             formatRecursively(accumulator, element.parent());
         }
-        accumulator.append(" > ").append(element.tagName());
+        accumulator.append(" > ").append(element.tagName()).append("[").append(element.siblingIndex()).append("]");
         if (element.id() != null) {
             accumulator.append(" ").append(element.id());
+        }
+        if (element.data() != null) {
+            accumulator.append(" ").append(element.data());
         }
     }
 }
