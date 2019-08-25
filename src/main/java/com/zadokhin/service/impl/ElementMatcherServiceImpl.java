@@ -28,6 +28,13 @@ public class ElementMatcherServiceImpl implements ElementMatcherService {
         return suspiciousElements.stream().max(Comparator.comparingInt(element -> checkElement(sample, element)));
     }
 
+    @Override
+    public void printElementScore(final Element sample, final Element foundElement) {
+        matchers.stream()
+                .map(matcher -> matcher.getClass().getSimpleName() + " score: " + matcher.matchingScore(sample, foundElement))
+                .forEach(System.out::println);
+    }
+
     private List<Element> getSuspiciousElements(final Element sample, final String filename) {
         return htmlElementFinder.findNodesBySelector(sample.tagName(), filename).orElse(new Elements());
     }

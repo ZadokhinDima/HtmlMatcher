@@ -35,12 +35,13 @@ public class App implements CommandLineRunner {
         final String diffCaseFilename = args[1];
         final String elementIdToSearch = getElementIdToSearch(args);
         final Optional<Element> nodeToFind = htmlElementFinder.findNodeById(elementIdToSearch, originalFilename);
-        if (!nodeToFind.isPresent()) {
-            System.out.printf("Sorry, cannot find element with id %s in original file", elementIdToSearch);
-        } else {
-            final Optional<Element> elementBySample = elementMatcherService.findElementBySample(nodeToFind.get(),
+        if (nodeToFind.isPresent()) {
+            final Element sampleElement = nodeToFind.get();
+            final Optional<Element> elementBySample = elementMatcherService.findElementBySample(sampleElement,
                     diffCaseFilename);
-            elementBySample.ifPresent(element -> System.out.println("Found element by sample: " + resultElementFormatter.format(element)));
+            elementBySample.ifPresent(element -> showResults(sampleElement, element));
+        } else {
+            System.out.printf("Sorry, cannot find element with id %s in original file", elementIdToSearch);
         }
     }
 
@@ -57,5 +58,11 @@ public class App implements CommandLineRunner {
         } else {
             return DEFAULT_ELEMENT_ID;
         }
+    }
+
+    private void showResults(final Element sample, final Element result) {
+        System.out.println("Found element by sample: " + resultElementFormatter.format(result));
+        System.out.println("=========SCORING============");
+        elementMatcherService.printElementScore(sample, result);
     }
 }

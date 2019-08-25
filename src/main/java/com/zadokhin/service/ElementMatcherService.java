@@ -8,4 +8,6 @@ public interface ElementMatcherService {
 
     Optional<Element> findElementBySample(Element sample, String filename);
 
+    void printElementScore(Element sample, Element foundElement);
+
 }
