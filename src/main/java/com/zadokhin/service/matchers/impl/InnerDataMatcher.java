@@ -12,7 +12,7 @@ public class InnerDataMatcher implements HtmlElementsMatcher {
 
     @Override
     public int matchingScore(final Element first, final Element second) {
-        if (Objects.equals(first.data(), second.data())) {
+        if (Objects.equals(first.html(), second.html())) {
             return 5;
         } else {
             return 0;

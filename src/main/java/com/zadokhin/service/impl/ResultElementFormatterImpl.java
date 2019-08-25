@@ -12,6 +12,7 @@ public class ResultElementFormatterImpl implements ResultElementFormatter {
     public String format(final Element element) {
         final StringBuilder accumulator = new StringBuilder();
         formatRecursively(accumulator, element);
+        accumulator.append(element.html());
         return accumulator.toString();
     }
 
@@ -22,9 +23,6 @@ public class ResultElementFormatterImpl implements ResultElementFormatter {
         accumulator.append(" > ").append(element.tagName()).append("[").append(element.siblingIndex()).append("]");
         if (element.id() != null) {
             accumulator.append(" ").append(element.id());
-        }
-        if (element.data() != null) {
-            accumulator.append(" ").append(element.data());
         }
     }
 }
