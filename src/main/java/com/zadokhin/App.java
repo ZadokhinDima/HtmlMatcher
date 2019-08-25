@@ -15,6 +15,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class App implements CommandLineRunner {
 
+    private static final String DEFAULT_ELEMENT_ID = "make-everything-ok-button";
+
     @Autowired
     private HtmlElementFinder htmlElementFinder;
     @Autowired
@@ -31,22 +33,29 @@ public class App implements CommandLineRunner {
         verifyInputParameters(args);
         final String originalFilename = args[0];
         final String diffCaseFilename = args[1];
-        final String idToFind = "make-everything-ok-button";
-        final Optional<Element> nodeToFind = htmlElementFinder.findNodeById(idToFind, originalFilename);
+        final String elementIdToSearch = getElementIdToSearch(args);
+        final Optional<Element> nodeToFind = htmlElementFinder.findNodeById(elementIdToSearch, originalFilename);
         if (!nodeToFind.isPresent()) {
-            System.out.printf("Sorry, cannot find element with id %s in original file", idToFind);
+            System.out.printf("Sorry, cannot find element with id %s in original file", elementIdToSearch);
+        } else {
+            final Optional<Element> elementBySample = elementMatcherService.findElementBySample(nodeToFind.get(),
+                    diffCaseFilename);
+            elementBySample.ifPresent(element -> System.out.println("Found element by sample: " + resultElementFormatter.format(element)));
         }
-
-        final Optional<Element> elementBySample = elementMatcherService.findElementBySample(nodeToFind.get(),
-                diffCaseFilename);
-
-        elementBySample.ifPresent(element -> System.out.println("Found element by sample: " + resultElementFormatter.format(element)));
     }
 
     private void verifyInputParameters(final String... args) {
         if (args.length < 2) {
             System.out.println("Please specify both original and diff-case html files");
             System.exit(1);
+        }
+    }
+
+    private String getElementIdToSearch(final String... args) {
+        if (args.length > 2) {
+            return args[2];
+        } else {
+            return DEFAULT_ELEMENT_ID;
         }
     }
 }
